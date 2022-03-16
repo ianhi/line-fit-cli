@@ -31,4 +31,3 @@ Ridge regression changing alpha
 ```bash
 csv-fit-linear examples/example.csv --ridge --ridge-alpha=.5
 ```
-
