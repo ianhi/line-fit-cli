@@ -8,6 +8,8 @@
 
 cli for loading csvs and fitting simple curves to them. Avoid opening needing to open a full python session or excel.
 
+To install: `pip install git+https://github.com/ianhi/line-fit-cli`
+
 Standard Least squares with a plot
 ```bash
 csv-fit-linear examples/example.csv
