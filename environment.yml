@@ -1,0 +1,9 @@
+name: line-fit-cli-dev
+channels:
+  - defaults
+dependencies:
+  - pandoc
+  - pip
+  - python
+  - pip:
+      - -e .[dev]
