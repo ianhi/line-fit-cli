@@ -8,18 +8,29 @@ from sklearn import linear_model
 from typing import Sequence
 
 
-def fit(file: Sequence[str], delim: str, plot: bool):
-    data = np.genfromtxt(file[0], delimiter=delim)
-    reg = linear_model.LinearRegression()
-    reg.fit(data[:, 0][:, None], data[:, 1])
-    print(f"slope={reg.coef_[0]:.4f}")
-    print(f"intercept={reg.intercept_:.4f}")
-    if plt is not None and plot:
+def _plot(data, reg):
+    if plt is not None:
         fig, ax = plt.subplots()
         ax.plot(data[:, 0], data[:, 1], "o")
         ax.plot(data[:, 0], reg.predict(data[:, 0][:, None]), "-")
         plt.show()
+def _print(reg):
+    """Print out regression information in a nice way
+    TODO: make it actually nice"""
+    print(reg)
+    print(f"slope={reg.coef_[0]:.4f}")
+    print(f"intercept={reg.intercept_:.4f}")
 
+def fit(file: Sequence[str], delim: str, plot: bool, ridge: bool=False, ridge_alpha: float=1):
+    data = np.genfromtxt(file[0], delimiter=delim)
+    if ridge:
+        model = linear_model.Ridge(ridge_alpha)
+    else:
+        model = linear_model.LinearRegression()
+    model.fit(data[:, 0][:, None], data[:, 1])
+    _print(model)
+    if plot:
+        _plot(data, model)
 
 def main():
     import argparse
@@ -39,5 +50,16 @@ def main():
         action=argparse.BooleanOptionalAction,
         help="Whether to make and show a plot.",
     )
+    parser.add_argument(
+        "--ridge",
+        action="store_true",
+        default=False,
+        help="If passed then perform a ridge regression"
+    )
+    parser.add_argument(
+        "--ridge-alpha",
+        default=1,
+        help="The regularization value for Ridge regression"
+    )
     args = parser.parse_args()
-    fit(args.file, args.delimiter, args.plot)
+    fit(args.file, args.delimiter, args.plot, args.ridge, args.ridge_alpha)
